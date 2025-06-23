@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smart Attendance Portal - by Shivam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --accent: #6366f1;
+      --gray: #e2e8f0;
+      --green: #05814b;
+      --text: #1e293b;
+      --white: #ffffff;
+      --bg: linear-gradient(to right, #dbeafe, #ede9fe);
+    }
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+    }
+    body.dark {
+      --bg: linear-gradient(to right, #0f172a, #1e293b);
+      --white: #1e293b;
+      --text: #f8fafc;
+      --gray: #334155;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      color: var(--text);
+      transition: 0.3s ease;
+    }
+    .card {
+      background: var(--white);
+      width: 100%;
+      max-width: 800px;
+      padding: 40px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-size: 28px;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      background: var(--accent);
+      border: none;
+      padding: 6px 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .subject-section {
+      margin-bottom: 30px;
+    }
+    .subject-section label {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .subject-section select {
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      width: 100%;
+      max-width: 300px;
+    }
+    .count-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      flex-wrap: wrap;
+    }
+    .container {
+      display: grid;
+      gap: 14px;
+      justify-items: center;
+      margin: 25px 0;
+      width: 100%;
+    }
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      }
+    }
+    @media (max-width: 767px) {
+      .container {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      }
+    }
+    .student-btn {
+      width: 50px;
+      height: 50px;
+      font-size: 16px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      color: #1e293b;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .student-btn.present {
+      background: var(--green);
+      color: white;
+    }
+    .submit-btn {
+      margin-top: 20px;
+      padding: 14px 30px;
+      background: var(--primary);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .submit-btn:hover {
+      background: #4338ca;
+    }
+    #messageBox {
+      margin-top: 20px;
+      background-color: var(--green);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      display: none;
+    }
+    footer {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #6b7280;
+      text-align: center;
+    }
+    footer span {
+      color: var(--accent);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Smart Student Attendance Portal</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">🌗</button>
+
+    <div class="subject-section">
+      <div style="font-weight: 600; margin-bottom: 10px;">👨‍🏫 MFT - Prof. Hiral Vyas</div>
+      <label for="subject">📘 Select Subject:</label><br/>
+      <select id="subject">
+        <option value="" disabled selected>Select Subject</option>
+        <option value="DADV">DADV</option>
+        <option value="DADV Lab">DADV Lab</option>
+        <option value="AWS">AWS</option>
+        <option value="SE">SE</option>
+        <option value="SE Lab">SE Lab</option>
+        <option value="ERP">ERP</option>
+        <option value="ERP Lab">ERP Lab</option>
+        <option value="DAA">DAA</option>
+        <option value="DAA Lab">DAA Lab</option>
+        <option value="PCE">PCE</option>
+        <option value="TOC">TOC</option>
+      </select>
+      <div style="margin-top: 10px; font-weight: 600;">👨‍🏫 Faculty: <span id="mftName">--</span></div>
+    </div>
+
+    <div class="count-section">
+      🧑‍🎓 Mark Present Students: <span id="presentCount">Count: 0</span>
+    </div>
+
+    <div class="container" id="rollContainer"></div>
+
+    <button class="submit-btn" onclick="submitAttendance()">✅ Submit Attendance</button>
+    <div id="messageBox">✅ Attendance Submitted Successfully!</div>
+
+    <footer>Powered by <span>Shivam</span> 🚀</footer>
+  </div>
+
+  <script>
+    const rollContainer = document.getElementById("rollContainer");
+    const subjectDropdown = document.getElementById("subject");
+    const messageBox = document.getElementById("messageBox");
+    const presentCount = document.getElementById("presentCount");
+
+    const mftMap = {
+      "DADV": "Anand Javdekar",
+      "DADV Lab": "Anand Javdekar",
+      "AWS": "Dr. Nithya Arumugam",
+      "SE": "Arunesh Pratap Singh",
+      "SE Lab": "Dr. Kapil Agrawal",
+      "ERP": "Gauri Nandan Upreti",
+      "ERP Lab": "Gauri Nandan Upreti",
+      "DAA": "Mudassir Ahmed Bhatt",
+      "DAA Lab": "Mudassir Ahmed Bhatt",
+      "PCE": "Dr. Alizehra Raza",
+      "TOC": "Amit Kumar"
+    };
+
+    function updateFacultyInfo(subject) {
+      const mftName = mftMap[subject] || "--";
+      document.getElementById("mftName").textContent = mftName;
+    }
+
+    function updatePresentCount() {
+      const count = document.querySelectorAll(".student-btn.present").length;
+      presentCount.innerText = `Count: ${count}`;
+    }
+
+    function renderRollButtons() {
+      rollContainer.innerHTML = "";
+      for (let i = 1; i <= 72; i++) {
+        const btn = document.createElement("button");
+        btn.classList.add("student-btn");
+        btn.innerText = i;
+        btn.addEventListener("click", () => {
+          btn.classList.toggle("present");
+          updatePresentCount();
+        });
+        rollContainer.appendChild(btn);
+      }
+      updatePresentCount();
+    }
+
+    renderRollButtons();
+
+    subjectDropdown.addEventListener("change", () => {
+      renderRollButtons();
+      updateFacultyInfo(subjectDropdown.value);
+    });
+
+    function submitAttendance() {
+      const selectedSubject = subjectDropdown.value;
+      if (!selectedSubject) {
+        showMessage("⚠️ Please select a subject", "#f97316");
+        return;
+      }
+
+      const presentButtons = document.querySelectorAll(".student-btn.present");
+      if (presentButtons.length === 0) {
+        showMessage("⚠️ Please mark at least one student present", "#f97316");
+        return;
+      }
+
+      const presentRolls = Array.from(presentButtons).map(btn => parseInt(btn.innerText));
+      const data = {
+        subject: selectedSubject,
+        present: presentRolls
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbwcvaOIuG6ZH-KmDJhsTDoRZKafou2fQVldYaRISP8qN1c55PEy9cu3TaMRheRxivYj/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      showMessage("✅ Attendance Submitted Successfully!");
+      renderRollButtons(); // reset
+    }
+
+    function showMessage(msg, color = "#10b981") {
+      messageBox.innerText = msg;
+      messageBox.style.backgroundColor = color;
+      messageBox.style.display = "block";
+      setTimeout(() => {
+        messageBox.style.display = "none";
+      }, 3000);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+    }
+  </script>
+</body>
+</html>
